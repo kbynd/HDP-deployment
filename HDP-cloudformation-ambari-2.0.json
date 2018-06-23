@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
   
-  "Description" : "Simple Cloudformation template used to setup a HDP cluster.",
+  "Description" : "Simple Cloudformation template used to setup a HDP 2.6 cluster.",
   
   "Parameters" : {
       
@@ -71,7 +71,7 @@
     },
 
     "AWSRegionArch2AMI" : {
-      "us-east-1"      : { "32" : "ami-436a702a", "64" : "ami-8d756fe4", "64HVM" : "NOT_YET_SUPPORTED" }
+      "us-east-2"      : { "64" : "ami-8d756fe4", "64HVM" : "NOT_YET_SUPPORTED" }
     }
   },
     
@@ -96,7 +96,7 @@
           "#!/bin/bash -v\n",
 
           "# Setup correct file ownership\n",
-          "wget http://public-repo-1.hortonworks.com/ambari/centos6/1.x/updates/1.6.1/ambari.repo -O /etc/yum.repos.d/ambari.repo\n",
+          "wget -nv http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.6.2.0/ambari.repo -O /etc/yum.repos.d/ambari.repo\n",
       
           "yum install -y ambari-server\n",
 
@@ -116,12 +116,12 @@
 
           "number_of_slaves=", { "Ref" : "MaximumSlaveNodes" } , "\n",
 
-          "wget https://github.com/varunrao/HDP-deployment/raw/master/multi-node-hdfs-yarn-blueprint.json\n",
+          "wget https://github.com/kbynd/HDP-deployment/raw/master/multi-node-hdfs-yarn-blueprint.json\n",
 
-          "wget https://github.com/varunrao/HDP-deployment/raw/master/blueprint-cluster-definition.json\n",
+          "wget https://github.com/kbynd/HDP-deployment/raw/master/blueprint-cluster-definition.json\n",
 
-          "wget https://github.com/varunrao/HDP-deployment/raw/master/wait-for-slaves.sh\n",
-          "wget https://github.com/varunrao/HDP-deployment/raw/master/replace-host-ip-for-cluster.sh\n",
+          "wget https://github.com/kbynd/HDP-deployment/raw/master/wait-for-slaves.sh\n",
+          "wget https://github.com/kbynd/HDP-deployment/raw/master/replace-host-ip-for-cluster.sh\n",
 
           "chmod +x wait-for-slaves.sh\n",
 
@@ -131,10 +131,10 @@
 
           "./replace-host-ip-for-cluster.sh $MY_IP\n",
 
-          "curl -u admin:admin -H 'X-Requested-By:Varun' -X POST http://$MY_IP:8080/api/v1/blueprints/multi-node-hdfs-yarn-blueprint -d @multi-node-hdfs-yarn-blueprint.json\n",
+          "curl -u admin:admin -H 'X-Requested-By:Kbynd' -X POST http://$MY_IP:8080/api/v1/blueprints/multi-node-hdfs-yarn-blueprint -d @multi-node-hdfs-yarn-blueprint.json\n",
 
 
-          "curl -u admin:admin -H 'X-Requested-By:Varun' -X POST http://$MY_IP:8080/api/v1/clusters/MyCluster -d @blueprint-cluster-definition.json\n"
+          "curl -u admin:admin -H 'X-Requested-By:Kbynd' -X POST http://$MY_IP:8080/api/v1/clusters/MyCluster -d @blueprint-cluster-definition.json\n"
 
         ]]}}        
       }
@@ -154,7 +154,7 @@
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash -v\n",
           "# Setup correct file ownership\n",
-          "wget http://public-repo-1.hortonworks.com/ambari/centos6/1.x/updates/1.6.1/ambari.repo -O /etc/yum.repos.d/ambari.repo\n",
+          "wget -nv http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.6.2.0/ambari.repo -O /etc/yum.repos.d/ambari.repo\n",
 
           "yum install -y ambari-agent\n",
 
